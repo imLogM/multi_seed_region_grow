@@ -25,6 +25,8 @@ A multi-seed region growing algorithm. It can be used as a preprocess in object-
  * use more powerful estimating algorithm, instead of "delta and threshold"
  * optimize for rgb image
  * ptimize the efficiency
- 
-------
+
+ ## Attention
+ You need to change "OpenCV_DIR", "OpenCV_LIB_DIR", "OpenCV_INCLUDE_DIRS" in "CMakeList.txt".
+
  For more detail, see: https://imlogm.github.io/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/multi-seed-region-grow/
