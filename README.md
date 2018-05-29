@@ -24,7 +24,7 @@ A multi-seed region growing algorithm. It can be used as a preprocess in object-
 ## TODO
  * use more powerful estimating algorithm, instead of "delta and threshold"
  * optimize for rgb image
- * ptimize the efficiency
+ * optimize the efficiency
 
  ## Attention
  You need to change "OpenCV_DIR", "OpenCV_LIB_DIR", "OpenCV_INCLUDE_DIRS" in "CMakeList.txt".
