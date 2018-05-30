@@ -38,14 +38,13 @@ int main() {
     // 1. read source image
     cv::Mat src = cv::imread("./img/3.jpg");
     if(src.empty()) { printf("Invalid input image..."); return -1; }
+    cv::namedWindow("src", CV_WINDOW_NORMAL);
+    cv::imshow("src", src);
 
-    // 2. convert to grey
+    // 2. convert to grey (now it's unnecessary)
 //    cv::Mat src;
 //    cv::cvtColor(src, src_grey, CV_BGR2GRAY);
-
-    cv::namedWindow("src", CV_WINDOW_NORMAL);
 //    cv::namedWindow("grey", CV_WINDOW_NORMAL);
-    cv::imshow("src", src);
 //    cv::imshow("grey", src_grey);
 
     // 3. ready for seed grow
@@ -86,7 +85,7 @@ int main() {
 void grow(cv::Mat& src, cv::Mat& dest, cv::Mat& mask, cv::Point seed, int threshold) {
     /* apply "seed grow" in a given seed
      * Params:
-     *   src: source image, need to be grey
+     *   src: source image
      *   dest: a matrix records which pixels are determined/undtermined/ignored
      *   mask: a matrix records the region found in current "seed grow"
      */
