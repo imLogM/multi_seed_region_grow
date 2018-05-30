@@ -3,7 +3,6 @@
  * date: 2018-05-22
  * information: a multi-seed region growing algorithm
  * TODO: use more powerful estimating algorithm, instead of "delta and threshold"
- * TODO: optimize for rgb image
  * TODO: optimize the efficiency
  */
 
@@ -15,10 +14,10 @@ using std::cout;
 using std::endl;
 using std::stack;
 
-void grow(cv::Mat& src, cv::Mat& dest, cv::Mat& mask, cv::Point seed, uchar threshold);
+void grow(cv::Mat& src, cv::Mat& dest, cv::Mat& mask, cv::Point seed, int threshold);
 
 // parameters
-const uchar threshold = 5;
+const int threshold = 200;
 const uchar max_region_num = 100;
 const double min_region_area_factor = 0.01;
 const cv::Point PointShift2D[8] =
@@ -40,31 +39,31 @@ int main() {
     if(src.empty()) { printf("Invalid input image..."); return -1; }
 
     // 2. convert to grey
-    cv::Mat src_grey;
-    cv::cvtColor(src, src_grey, CV_BGR2GRAY);
+//    cv::Mat src;
+//    cv::cvtColor(src, src_grey, CV_BGR2GRAY);
 
     cv::namedWindow("src", CV_WINDOW_NORMAL);
-    cv::namedWindow("grey", CV_WINDOW_NORMAL);
+//    cv::namedWindow("grey", CV_WINDOW_NORMAL);
     cv::imshow("src", src);
-    cv::imshow("grey", src_grey);
+//    cv::imshow("grey", src_grey);
 
     // 3. ready for seed grow
-    int min_region_area = int(min_region_area_factor * src_grey.cols * src_grey.rows);  // small region will be ignored
+    int min_region_area = int(min_region_area_factor * src.cols * src.rows);  // small region will be ignored
     cv::namedWindow("mask", CV_WINDOW_NORMAL);
 
     // "dest" records all regions using different padding number
     // 0 - undetermined, 255 - ignored, other number - determined
     uchar padding = 1;  // use which number to pad in "dest"
-    cv::Mat dest = cv::Mat::zeros(src_grey.rows, src_grey.cols, CV_8UC1);
+    cv::Mat dest = cv::Mat::zeros(src.rows, src.cols, CV_8UC1);
 
     // "mask" records current region, always use "1" for padding
-    cv::Mat mask = cv::Mat::zeros(src_grey.rows, src_grey.cols, CV_8UC1);
+    cv::Mat mask = cv::Mat::zeros(src.rows, src.cols, CV_8UC1);
 
     // 4. traversal the whole image, apply "seed grow" in undetermined pixels
-    for (int x=0; x<src_grey.cols; ++x) {
-        for (int y=0; y<src_grey.rows; ++y) {
+    for (int x=0; x<src.cols; ++x) {
+        for (int y=0; y<src.rows; ++y) {
             if (dest.at<uchar>(cv::Point(x, y)) == 0) {
-                grow(src_grey, dest, mask, cv::Point(x, y), threshold);
+                grow(src, dest, mask, cv::Point(x, y), threshold);
 
                 int mask_area = (int)cv::sum(mask).val[0];  // calculate area of the region that we get in "seed grow"
                 if (mask_area > min_region_area) {
@@ -83,7 +82,7 @@ int main() {
     return 0;
 }
 
-void grow(cv::Mat& src, cv::Mat& dest, cv::Mat& mask, cv::Point seed, uchar threshold) {
+void grow(cv::Mat& src, cv::Mat& dest, cv::Mat& mask, cv::Point seed, int threshold) {
     /* apply "seed grow" in a given seed
      * Params:
      *   src: source image, need to be grey
@@ -107,7 +106,11 @@ void grow(cv::Mat& src, cv::Mat& dest, cv::Mat& mask, cv::Point seed, uchar thre
                 // estimating_point should not out of the range in image
                 continue;
             } else {
-                uchar delta = (uchar)abs(src.at<uchar>(center) - src.at<uchar>(estimating_point));
+//                uchar delta = (uchar)abs(src.at<uchar>(center) - src.at<uchar>(estimating_point));
+                // delta = (R-R')^2 + (G-G')^2 + (B-B')^2
+                int delta = int(pow(src.at<cv::Vec3b>(center)[0] - src.at<cv::Vec3b>(estimating_point)[0], 2)
+                                + pow(src.at<cv::Vec3b>(center)[1] - src.at<cv::Vec3b>(estimating_point)[1], 2)
+                                + pow(src.at<cv::Vec3b>(center)[2] - src.at<cv::Vec3b>(estimating_point)[2], 2));
                 if (dest.at<uchar>(estimating_point) == 0
                     && mask.at<uchar>(estimating_point) == 0
                     && delta < threshold) {
