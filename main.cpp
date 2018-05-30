@@ -1,6 +1,7 @@
 /*
  * author: LogM
  * date: 2018-05-22
+ * update: 2018-05-30
  * information: a multi-seed region growing algorithm
  * TODO: use more powerful estimating algorithm, instead of "delta and threshold"
  * TODO: optimize the efficiency
