@@ -1,14 +1,16 @@
 /*
  * author: LogM
  * date: 2018-05-22
- * update: 2018-05-30
- * information: a multi-seed region growing algorithm
+ * update: 2018-06-11
+ * information: A multi-seed region growing algorithm.
+ *              In order to compile, you need to change "OpenCV_DIR", "OpenCV_LIB_DIR", "OpenCV_INCLUDE_DIRS" in "CMakeList.txt".
  * TODO: use more powerful estimating algorithm, instead of "delta and threshold"
  * TODO: optimize the efficiency
  */
 
 #include <iostream>
 #include <stack>
+#include <cassert>
 #include <opencv2/opencv.hpp>
 
 using std::cout;
@@ -37,7 +39,10 @@ const cv::Point PointShift2D[8] =
 int main() {
     // 1. read source image
     cv::Mat src = cv::imread("./img/3.jpg");
-    if(src.empty()) { printf("Invalid input image..."); return -1; }
+    assert(!src.empty());
+    if (src.cols > 500 || src.rows > 500) {
+        cv::resize(src, src, cv::Size(0, 0), 0.5, 0.5); // resize for speed
+    }
     cv::namedWindow("src", CV_WINDOW_NORMAL);
     cv::imshow("src", src);
 

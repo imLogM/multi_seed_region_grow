@@ -8,6 +8,10 @@ It's not easy to find multi-seed region growing algorithm written in C++ and ope
 * CMake
 * Opencv 2
 
+## Files
+* main.cpp: "main" file, implement "multi-seed region grow" algorithm in C++
+* auto_threshold_demo.cpp: a demo show how to implement "auto-threshold"
+
 ## Effect
 * source image
 <div align=center><img src="./img/effect/1.png"/></div>
@@ -51,3 +55,4 @@ It's not easy to find multi-seed region growing algorithm written in C++ and ope
 
 * result
 <div align=center><img src="./img/effect/12.png"/></div>
+<div align=center>not like "main.cpp", the regions segmented by this algorithm have different colors</div>
